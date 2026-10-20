@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const teacherSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -6,8 +8,8 @@ const teacherSchema = new mongoose.Schema({
     unique: true,
   },
   qualification: String,
-  hire_date: Date,
-  salary: Number,
+  hire_date: { type: Date, required: true },
+  salary: { type: Number, required: true, min: 0 },
   salary_status: {
     type: String,
     enum: ["paid", "unpaid"],
@@ -15,4 +17,4 @@ const teacherSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Teacher", teacherSchema);
+export default mongoose.model("Teacher", teacherSchema);

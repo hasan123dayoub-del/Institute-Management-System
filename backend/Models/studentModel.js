@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const studentSchema = new mongoose.Schema({
   user_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -10,6 +12,7 @@ const studentSchema = new mongoose.Schema({
     ref: "Level",
     required: true,
   },
+  // null = waiting to be placed in a class
   class_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Class",
@@ -31,4 +34,4 @@ const studentSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Student", studentSchema);
+export default mongoose.model("Student", studentSchema);
