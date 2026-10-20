@@ -1,0 +1,41 @@
+/* Design tokens. Never hard-code a colour in a component: always use var(--...).
+   Light is the default; dark applies when the user picks it (data-theme="dark"),
+   or when the choice is "system" and the OS prefers dark. */
+:root {
+  --bg: #F7F8FB; --surface: #FFFFFF; --sunk: #EEF2F8; --line: #DCE3EE;
+  --ink: #1F2A44; --muted: #5D6A82;
+  --teal: #4A6FA5; --teal-soft: #DFE8F3; --amber: #F2A97F; --amber-soft: #FCE9DD;
+  --ok: #2F8A5F; --warn: #B5632E; --bad: #C2473F; --on-pr: #FFFFFF;
+  --ok-soft: #2F8A5F22; --bad-soft: #C2473F1f;
+  --brand-deep: #2E4A75;
+
+  --display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
+  --body: "IBM Plex Sans", system-ui, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", Consolas, monospace;
+
+  --radius: 10px; --radius-sm: 6px;
+  --sidebar-w: 232px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141C2C; --surface: #1B2539; --sunk: #111827; --line: #2A3954;
+    --ink: #E4EAF4; --muted: #98A6BF;
+    --teal: #8DADDB; --teal-soft: #24324D; --amber: #F5B892; --amber-soft: #3A2A22;
+    --ok: #5FC492; --warn: #F0A877; --bad: #E87C74; --on-pr: #121A2A;
+    --ok-soft: #5FC49226; --bad-soft: #E87C7424;
+    --brand-deep: #0F1626;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #141C2C; --surface: #1B2539; --sunk: #111827; --line: #2A3954;
+  --ink: #E4EAF4; --muted: #98A6BF;
+  --teal: #8DADDB; --teal-soft: #24324D; --amber: #F5B892; --amber-soft: #3A2A22;
+  --ok: #5FC492; --warn: #F0A877; --bad: #E87C74; --on-pr: #121A2A;
+  --ok-soft: #5FC49226; --bad-soft: #E87C7424;
+  --brand-deep: #0F1626;
+  color-scheme: dark;
+}
