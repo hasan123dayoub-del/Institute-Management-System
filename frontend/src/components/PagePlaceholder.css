@@ -1,0 +1,3 @@
+.placeholder { border-style: dashed; align-items: flex-start; }
+.placeholder ul { margin: 0; padding-inline-start: 20px; color: var(--muted); line-height: 1.8; }
+.placeholder code { background: var(--sunk); padding: 1px 6px; border-radius: 4px; margin-inline-end: 6px; }
