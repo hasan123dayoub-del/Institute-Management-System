@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const classSchema = new mongoose.Schema({
   level_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -15,8 +17,8 @@ const classSchema = new mongoose.Schema({
     required: true,
   },
   room: String,
-  capacity: { type: Number, required: true },
-  start_date: Date,
+  capacity: { type: Number, default: 20, min: 1 },
+  start_date: { type: Date, required: true },
   status: {
     type: String,
     enum: ["open", "running", "finished"],
@@ -24,4 +26,7 @@ const classSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Class", classSchema);
+// One morning and one evening class per level per term.
+classSchema.index({ level_id: 1, shift: 1, start_date: 1 }, { unique: true });
+
+export default mongoose.model("Class", classSchema);

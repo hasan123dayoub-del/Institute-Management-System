@@ -1,8 +1,16 @@
+import mongoose from "mongoose";
+
 const userSchema = new mongoose.Schema(
   {
-    full_name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password_hash: { type: String, required: true },
+    full_name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password_hash: { type: String, required: true, select: false },
     phone: String,
     role: {
       type: String,
@@ -14,4 +22,4 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
