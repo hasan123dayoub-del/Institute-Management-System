@@ -27,6 +27,9 @@ const MAP = {
   // class.shift
   morning: ['Morning', 'warn'],
   evening: ['Evening', 'info'],
+  // user.is_active (frontend only: pick with `is_active ? 'enabled' : 'disabled'`)
+  enabled: ['Active', 'ok'],
+  disabled: ['Inactive', 'neutral'],
   // exam result (frontend only)
   passed: ['Passed', 'ok'],
   failed: ['Failed', 'bad'],
