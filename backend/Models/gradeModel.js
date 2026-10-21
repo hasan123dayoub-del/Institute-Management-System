@@ -25,6 +25,10 @@ gradeSchema.pre("validate", function () {
   if (this.score > this.max_score) {
     this.invalidate("score", "score cannot exceed max_score");
   }
+  const expectedMaxScores = { oral: 20, midterm: 30, final: 50 };
+  if (this.exam && expectedMaxScores[this.exam] !== this.max_score) {
+    this.invalidate("max_score", `max_score must be ${expectedMaxScores[this.exam]} for ${this.exam}`);
+  }
 });
 
 // One grade per student per exam per class.
