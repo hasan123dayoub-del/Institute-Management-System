@@ -1,7 +1,9 @@
 import { Router } from "express";
+import authorize from "../middleware/authorize.js";
+import { setPassword } from "../Controllers/userController.js";
 
 const router = Router();
 
-// TODO: add the routes for this resource (see docs/api-contract.md)
+router.patch("/:id/password", authorize("admin", "secretary"), setPassword);
 
 export default router;
