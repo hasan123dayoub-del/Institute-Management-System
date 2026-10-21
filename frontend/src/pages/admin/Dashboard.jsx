@@ -6,7 +6,8 @@ import SalariesTable from '@/features/admin/SalariesTable.jsx'
 import ShiftDonut from '@/features/admin/ShiftDonut.jsx'
 import StatCard from '@/features/admin/StatCard.jsx'
 import StudentsByLevelChart from '@/features/admin/StudentsByLevelChart.jsx'
-import { USE_SAMPLE_DATA, useOverview } from '@/features/admin/useOverview.js'
+import { USE_SAMPLE_DATA } from '@/features/admin/config.js'
+import { useOverview } from '@/features/admin/useOverview.js'
 
 // Admin dashboard. Read only: it just shows numbers.
 export default function Dashboard() {
