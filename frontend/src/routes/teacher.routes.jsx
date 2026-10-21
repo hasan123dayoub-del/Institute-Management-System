@@ -1,8 +1,7 @@
 import { Navigate } from 'react-router'
 import ProtectedRoute from '../auth/ProtectedRoute.jsx'
 import AppShell from '../layouts/AppShell.jsx'
-import Grades from '../pages/teacher/Grades.jsx'
-import Schedule from '../pages/teacher/Schedule.jsx'
+import { lazyPage } from './lazyPage.js'
 
 // Owner: Dev 2 (F2)
 export default {
@@ -14,7 +13,7 @@ export default {
   ),
   children: [
     { index: true, element: <Navigate to="schedule" replace /> },
-    { path: 'schedule', element: <Schedule />, handle: { title: 'My weekly timetable' } },
-    { path: 'grades', element: <Grades />, handle: { title: 'Enter grades' } },
+    { path: 'schedule', ...lazyPage(() => import('../pages/teacher/Schedule.jsx')), handle: { title: 'My weekly timetable' } },
+    { path: 'grades', ...lazyPage(() => import('../pages/teacher/Grades.jsx')), handle: { title: 'Enter grades' } },
   ],
 }

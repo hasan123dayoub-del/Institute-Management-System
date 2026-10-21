@@ -1,80 +1,100 @@
 import { BookOpen, GraduationCap, Trophy, Users, Wallet } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+import * as statsApi from '@/api/stats.js'
+import * as teachersApi from '@/api/teachers.js'
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import PassRateList from '@/features/admin/PassRateList.jsx'
 import SalariesTable from '@/features/admin/SalariesTable.jsx'
 import ShiftDonut from '@/features/admin/ShiftDonut.jsx'
 import StatCard from '@/features/admin/StatCard.jsx'
 import StudentsByLevelChart from '@/features/admin/StudentsByLevelChart.jsx'
-import { USE_SAMPLE_DATA } from '@/features/admin/config.js'
-import { useOverview } from '@/features/admin/useOverview.js'
+import { useLoad } from '@/hooks/useLoad.js'
+
+// Three sources, asked at the same time:
+//  - stats.overview()   students and running classes
+//  - stats.breakdown()  numbers for the charts (null when the backend cannot give them yet)
+//  - teachers.list()    salaries (real backend)
+// Defined outside the component so useLoad sees the same function on every render.
+const loadDashboard = () =>
+  Promise.all([statsApi.overview(), statsApi.breakdown(), teachersApi.list()]).then(([overview, breakdown, teachers]) => ({
+    overview,
+    breakdown,
+    teachers,
+  }))
 
 // Admin dashboard. Read only: it just shows numbers.
 export default function Dashboard() {
-  const { data, error, loading } = useOverview()
+  const { data, error, loading } = useLoad(loadDashboard)
 
-  // 1) still loading -> grey placeholder blocks
   if (loading) return <DashboardSkeleton />
-
-  // 2) the request failed -> show why
   if (error) {
-    return (
-      <p className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive" role="alert">
-        {error}
-      </p>
-    )
+    return <p className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive" role="alert">{error}</p>
   }
 
-  // 3) we have data -> work out a few totals from it, then draw everything
-  const morning = data.by_level.reduce((sum, row) => sum + row.morning, 0)
-  const evening = data.by_level.reduce((sum, row) => sum + row.evening, 0)
-  const paid = data.salaries.filter((t) => t.salary_status === 'paid').length
-  const unpaid = data.salaries.length - paid
+  const { overview, breakdown, teachers } = data
+  const paid = teachers.filter((t) => t.salary_status === 'paid').length
+  const unpaid = teachers.length - paid
   const month = new Date().toLocaleString('en-US', { month: 'long' })
+
+  // totals for the donut, worked out from the per-level numbers
+  const morning = breakdown?.by_level.reduce((sum, row) => sum + row.morning, 0) ?? 0
+  const evening = breakdown?.by_level.reduce((sum, row) => sum + row.evening, 0) ?? 0
 
   return (
     <div className="flex flex-col gap-4">
-      {USE_SAMPLE_DATA && (
-        <Badge variant="outline" className="w-fit">Sample data: the stats API is not connected yet</Badge>
-      )}
-
       {/* Row 1: five numbers. 1 column on phones, 2 on tablets, 5 on wide screens */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
         <StatCard
           title="Students"
-          value={data.students.total}
-          note={`${data.students.waiting} waiting for a class`}
+          value={overview.students.active}
+          note={`${overview.students.waiting} waiting for a class`}
           icon={Users}
         />
         <StatCard
           title="Courses running"
-          value={data.courses.running}
-          note={`${data.courses.open} open · ${data.courses.finished} finished`}
+          value={overview.classes.running}
+          note={breakdown ? `${breakdown.courses.open} open · ${breakdown.courses.finished} finished` : undefined}
           icon={BookOpen}
         />
-        <StatCard title="Teachers" value={data.teachers.total} icon={GraduationCap} />
-        <StatCard title="Pass rate" value={`${data.pass_rate}%`} note="last term" icon={Trophy} />
+        <StatCard title="Teachers" value={teachers.length} icon={GraduationCap} />
+        <StatCard
+          title="Pass rate"
+          value={breakdown?.pass_rate == null ? '—' : `${breakdown.pass_rate}%`}
+          note={breakdown?.pass_rate == null ? 'no finished course yet' : 'finished courses'}
+          icon={Trophy}
+        />
         <StatCard
           title={`${month} salaries`}
-          value={`${paid}/${data.salaries.length}`}
-          note={unpaid ? `${unpaid} unpaid` : 'All paid'}
-          noteClassName={unpaid ? 'text-xs text-destructive' : 'text-xs text-success'}
+          value={teachers.length ? `${paid}/${teachers.length}` : '—'}
+          note={teachers.length ? (unpaid ? `${unpaid} unpaid` : 'All paid') : 'no teachers yet'}
+          noteClassName={teachers.length === 0 ? undefined : unpaid ? 'text-xs text-destructive' : 'text-xs text-success'}
           icon={Wallet}
         />
       </div>
 
       {/* Row 2: the two charts. On wide screens the bar chart takes 2/3 of the width */}
-      <div className="grid gap-4 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <StudentsByLevelChart data={data.by_level} />
+      {breakdown ? (
+        <div className="grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <StudentsByLevelChart data={breakdown.by_level} />
+          </div>
+          <ShiftDonut morning={morning} evening={evening} />
         </div>
-        <ShiftDonut morning={morning} evening={evening} />
-      </div>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Charts</CardTitle>
+            <CardDescription>
+              Students by level and shift, and pass rates, need extra numbers from the stats API. They will appear here as soon as it provides them.
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      )}
 
       {/* Row 3: salaries and pass rates */}
       <div className="grid gap-4 lg:grid-cols-2">
-        <SalariesTable salaries={data.salaries} month={month} />
-        <PassRateList rows={data.pass_by_level} />
+        <SalariesTable salaries={teachers} month={month} />
+        {breakdown && <PassRateList rows={breakdown.pass_by_level} />}
       </div>
     </div>
   )

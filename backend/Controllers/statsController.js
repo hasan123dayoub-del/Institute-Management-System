@@ -1,6 +1,18 @@
-// Thin layer: read req, call services/statsService.js, send res.
-// TODO: handlers for this resource (see docs/api-contract.md)
-import * as statsService from "../services/statsService.js";
+import { getBreakdown, getOverviewStats } from "../services/statsService.js";
 
-void statsService;
-export {};
+export const getAdminStats = async (req, res, next) => {
+  try {
+    const stats = await getOverviewStats();
+    res.status(200).json(stats);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAdminBreakdown = async (req, res, next) => {
+  try {
+    res.status(200).json(await getBreakdown());
+  } catch (error) {
+    next(error);
+  }
+};

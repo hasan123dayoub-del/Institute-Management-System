@@ -7,8 +7,10 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
+    "db": "node scripts/dev-db.js",
     "seed": "node seed.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed:demo": "node seedDemo.js",
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",

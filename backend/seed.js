@@ -1,7 +1,13 @@
 import "dotenv/config"; // must stay the first import
 import mongoose from "mongoose";
 import connectDB from "./config/db.js";
+import Class from "./Models/classModel.js";
+import Grade from "./Models/gradeModel.js";
 import Level from "./Models/levelModel.js";
+import Result from "./Models/resultModel.js";
+import Schedule from "./Models/scheduleModel.js";
+import Student from "./Models/studentModel.js";
+import Teacher from "./Models/teacherModel.js";
 import User from "./Models/userModel.js";
 import { hash } from "./lib/password.js";
 
@@ -9,6 +15,13 @@ const HOURS = { A1: 36, A2: 36, B1: 45, B2: 45, C1: 54, C2: 54 };
 
 try {
   await connectDB();
+
+  // Create every collection with its indexes (unique email, one class per level+shift+date, one grade per exam...)
+  // even while it is still empty, so the whole schema is there from the first day.
+  for (const model of [User, Teacher, Level, Class, Student, Schedule, Grade, Result]) {
+    await model.createCollection();
+    await model.syncIndexes();
+  }
 
   for (const [code, hours] of Object.entries(HOURS)) {
     await Level.updateOne({ code }, { code, hours }, { upsert: true });

@@ -1,24 +1,29 @@
 import { KeyRound, Pencil, Plus, Power, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import * as secretariesApi from '@/api/secretaries.js'
+import * as usersApi from '@/api/users.js'
+import ConfirmDialog from '@/components/ConfirmDialog.jsx'
+import SetPasswordDialog from '@/components/SetPasswordDialog.jsx'
 import StatusPill from '@/components/StatusPill.jsx'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
-import { USE_SAMPLE_DATA } from '@/features/admin/config.js'
-import DeleteSecretaryDialog from '@/features/admin/DeleteSecretaryDialog.jsx'
 import SecretaryFormDialog from '@/features/admin/SecretaryFormDialog.jsx'
-import SecretaryPasswordDialog from '@/features/admin/SecretaryPasswordDialog.jsx'
-import { useSecretaries } from '@/features/admin/useSecretaries.js'
+import { perform, useLoad } from '@/hooks/useLoad.js'
+import { initialOf } from '@/lib/format.js'
 
 // Admin: manage the secretary accounts (add, edit, set password, deactivate, delete).
+// Talks to the real backend: GET/POST/PATCH/DELETE /secretaries and PATCH /users/:id/password.
 export default function Secretaries() {
-  const { items, error, loading, create, update, toggleActive, changePassword, remove } = useSecretaries()
+  const { data: items, error, loading, reload } = useLoad(secretariesApi.list)
 
   // Which dialog is open? null = none. Otherwise { type: 'create' | 'edit' | 'password' | 'delete', secretary }.
   const [dialog, setDialog] = useState(null)
   const close = () => setDialog(null)
+
+  // run(action, message): do it, toast it, then refresh the list (only when it worked)
+  const run = (action, message) => perform(action, message).then(reload)
 
   if (error) {
     return (
@@ -30,10 +35,6 @@ export default function Secretaries() {
 
   return (
     <div className="flex flex-col gap-4">
-      {USE_SAMPLE_DATA && (
-        <Badge variant="outline" className="w-fit">Sample data: changes are lost when you reload</Badge>
-      )}
-
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground">
           {loading ? 'Loading…' : `${items.length} accounts · ${items.filter((s) => s.is_active).length} active`}
@@ -76,15 +77,14 @@ export default function Secretaries() {
                 <TableRow key={s.id}>
                   <TableCell>
                     <div className="flex items-center gap-2 font-medium">
-                      {/* the round badge with her first letter */}
                       <span className="grid size-7 shrink-0 place-items-center rounded-full bg-accent text-xs font-bold text-primary">
-                        {s.full_name[0]}
+                        {initialOf(s.full_name)}
                       </span>
                       {s.full_name}
                     </div>
                   </TableCell>
                   <TableCell className="font-mono text-xs">{s.email}</TableCell>
-                  <TableCell className="font-mono text-xs">{s.phone}</TableCell>
+                  <TableCell className="font-mono text-xs">{s.phone || '—'}</TableCell>
                   <TableCell><StatusPill value={s.is_active ? 'enabled' : 'disabled'} /></TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-1">
@@ -94,8 +94,19 @@ export default function Secretaries() {
                       <Button variant="ghost" size="icon-sm" title="Set password" aria-label={`Set password for ${s.full_name}`} onClick={() => setDialog({ type: 'password', secretary: s })}>
                         <KeyRound aria-hidden="true" />
                       </Button>
-                      {/* toggleActive runs immediately: it is easy to undo, so no confirmation box */}
-                      <Button variant="ghost" size="icon-sm" title={s.is_active ? 'Deactivate' : 'Activate'} aria-label={`${s.is_active ? 'Deactivate' : 'Activate'} ${s.full_name}`} onClick={() => toggleActive(s).catch(() => {})}>
+                      {/* runs immediately: it is easy to undo, so no confirmation box */}
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        title={s.is_active ? 'Deactivate' : 'Activate'}
+                        aria-label={`${s.is_active ? 'Deactivate' : 'Activate'} ${s.full_name}`}
+                        onClick={() =>
+                          run(
+                            () => secretariesApi.update(s.id, { is_active: !s.is_active }),
+                            s.is_active ? 'Account deactivated' : 'Account activated',
+                          ).catch(() => {})
+                        }
+                      >
                         <Power aria-hidden="true" />
                       </Button>
                       <Button variant="ghost" size="icon-sm" className="text-destructive hover:text-destructive" title="Delete" aria-label={`Delete ${s.full_name}`} onClick={() => setDialog({ type: 'delete', secretary: s })}>
@@ -111,25 +122,35 @@ export default function Secretaries() {
       </Card>
 
       {/* Only the dialog that matches `dialog.type` is mounted, so its form starts fresh each time. */}
-      {dialog?.type === 'create' && <SecretaryFormDialog onSubmit={create} onClose={close} />}
+      {dialog?.type === 'create' && (
+        <SecretaryFormDialog
+          onSubmit={({ full_name, email, phone, password }) =>
+            run(() => secretariesApi.create({ full_name, email, phone, password }), 'Secretary added')
+          }
+          onClose={close}
+        />
+      )}
       {dialog?.type === 'edit' && (
         <SecretaryFormDialog
           secretary={dialog.secretary}
-          onSubmit={({ full_name, email, phone }) => update(dialog.secretary.id, { full_name, email, phone })}
+          onSubmit={({ full_name, email, phone }) =>
+            run(() => secretariesApi.update(dialog.secretary.id, { full_name, email, phone }), 'Changes saved')
+          }
           onClose={close}
         />
       )}
       {dialog?.type === 'password' && (
-        <SecretaryPasswordDialog
-          secretary={dialog.secretary}
-          onSubmit={(password) => changePassword(dialog.secretary.id, password)}
+        <SetPasswordDialog
+          name={dialog.secretary.full_name}
+          onSubmit={(password) => perform(() => usersApi.setPassword(dialog.secretary.id, password), 'Password changed')}
           onClose={close}
         />
       )}
       {dialog?.type === 'delete' && (
-        <DeleteSecretaryDialog
-          secretary={dialog.secretary}
-          onConfirm={() => remove(dialog.secretary.id)}
+        <ConfirmDialog
+          title={`Delete ${dialog.secretary.full_name}?`}
+          description="Her account will be removed for good. If you only want to stop her from logging in, deactivate it instead."
+          onConfirm={() => run(() => secretariesApi.remove(dialog.secretary.id), 'Secretary deleted')}
           onClose={close}
         />
       )}

@@ -3,8 +3,10 @@ import PasswordField from '@/components/PasswordField.jsx'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
-// The admin sets a secretary's password. Secretaries cannot change it themselves.
-export default function SecretaryPasswordDialog({ secretary, onSubmit, onClose }) {
+// Staff set other people's passwords (nobody can change their own).
+// Used for secretaries (by the admin) and for teachers and students (by the secretary).
+// onSubmit(password) must return a promise.
+export default function SetPasswordDialog({ name, onSubmit, onClose }) {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [busy, setBusy] = useState(false)
@@ -30,7 +32,7 @@ export default function SecretaryPasswordDialog({ secretary, onSubmit, onClose }
         <form onSubmit={submit} className="flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>New password</DialogTitle>
-            <DialogDescription>For {secretary.full_name}. Give it to her yourself: it cannot be seen again.</DialogDescription>
+            <DialogDescription>For {name}. Give it to them yourself: it cannot be seen again.</DialogDescription>
           </DialogHeader>
           <PasswordField label="New password" value={password} onChange={setPassword} error={error} />
           <DialogFooter>

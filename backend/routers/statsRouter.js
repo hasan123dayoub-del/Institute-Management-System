@@ -1,7 +1,14 @@
-import { Router } from "express";
+import express from "express";
+import { getAdminBreakdown, getAdminStats } from "../Controllers/statsController.js";
+import authenticate from "../middleware/authenticate.js";
+import authorize from "../middleware/authorize.js";
 
-const router = Router();
+const router = express.Router();
 
-// TODO: add the routes for this resource (see docs/api-contract.md)
+// مسار جلب إحصائيات المعهد الإجمالية: GET /api/stats/overview
+router.get("/overview", authenticate, authorize("admin"), getAdminStats);
+
+// Numbers for the dashboard charts: GET /api/stats/breakdown
+router.get("/breakdown", authenticate, authorize("admin"), getAdminBreakdown);
 
 export default router;
