@@ -1,7 +1,9 @@
 import { Router } from "express";
+import { list } from "../Controllers/levelController.js";
 
 const router = Router();
 
-// TODO: add the routes for this resource (see docs/api-contract.md)
+// Any logged in user may read the levels.
+router.get("/", list);
 
 export default router;

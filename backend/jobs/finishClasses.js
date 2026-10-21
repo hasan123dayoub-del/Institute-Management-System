@@ -54,7 +54,7 @@ const finishClass = async (classId, now) => {
           `Student ${invalidStudent._id} has unsupported status "${invalidStudent.status}"; migrate legacy student statuses before finishing classes`,
         );
       }
-      const studentsToFinalize = students.filter((student) => student.status !== "finished");
+      const studentsToFinalize = students;
       const studentIds = studentsToFinalize.map((student) => student._id);
       const grades = studentIds.length
         ? await Grade.find({ class_id: cls._id, student_id: { $in: studentIds } })
@@ -78,16 +78,13 @@ const finishClass = async (classId, now) => {
         studentResults.map((studentResult) => [String(studentResult.student_id), studentResult]),
       );
 
+      // Everybody leaves the class and waits for the secretary to place them in a new one.
+      // Passed: next level (after C2: graduated). Failed, or no final grade: same level.
       for (const student of students) {
-        if (student.status === "finished") {
-          student.class_id = null;
-          await student.save({ session });
-          continue;
-        }
-        const studentResult = resultsByStudent.get(String(student._id));
-        if (studentResult.passed && nextLevel) student.level_id = nextLevel._id;
+        const passed = resultsByStudent.get(String(student._id)).passed;
+        if (passed && nextLevel) student.level_id = nextLevel._id;
         student.class_id = null;
-        student.status = "finished";
+        student.status = passed && !nextLevel ? "graduated" : "waiting";
         await student.save({ session });
       }
 

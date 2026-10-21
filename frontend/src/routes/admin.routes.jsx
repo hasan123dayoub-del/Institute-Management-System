@@ -1,6 +1,6 @@
 import ProtectedRoute from '../auth/ProtectedRoute.jsx'
 import AppShell from '../layouts/AppShell.jsx'
-import Secretaries from '../pages/admin/Secretaries.jsx'
+import { lazyPage } from './lazyPage.js'
 
 // Owner: Dev 2 (F2)
 export default {
@@ -11,12 +11,8 @@ export default {
     </ProtectedRoute>
   ),
   children: [
-    {
-      index: true,
-      // lazy: the dashboard (and the chart library) is downloaded only when an admin opens it
-      lazy: async () => ({ Component: (await import('../pages/admin/Dashboard.jsx')).default }),
-      handle: { title: 'Dashboard' },
-    },
-    { path: 'secretaries', element: <Secretaries />, handle: { title: 'Secretary accounts' } },
+    // the dashboard (and the chart library) is downloaded only when an admin opens it
+    { index: true, ...lazyPage(() => import('../pages/admin/Dashboard.jsx')), handle: { title: 'Dashboard' } },
+    { path: 'secretaries', ...lazyPage(() => import('../pages/admin/Secretaries.jsx')), handle: { title: 'Secretary accounts' } },
   ],
 }

@@ -24,3 +24,24 @@ export function lastSessionDate(cls, schedules) {
   }
   return null;
 }
+
+// How many sessions were held from the class start up to and including `today` (never more than the total).
+export function sessionsHeld(cls, schedules, today = new Date()) {
+  if (!cls?.start_date || !Array.isArray(schedules)) return 0;
+  const days = new Set(
+    schedules.map((schedule) => JS_DAY[schedule.day]).filter(Number.isInteger),
+  );
+  const total = totalSessions(cls.level);
+  const date = new Date(cls.start_date);
+  if (!days.size || !total || Number.isNaN(date.getTime())) return 0;
+  date.setUTCHours(0, 0, 0, 0);
+  const last = new Date(today);
+  last.setUTCHours(0, 0, 0, 0);
+
+  let held = 0;
+  while (date <= last && held < total) {
+    if (days.has(date.getUTCDay())) held += 1;
+    date.setUTCDate(date.getUTCDate() + 1);
+  }
+  return held;
+}

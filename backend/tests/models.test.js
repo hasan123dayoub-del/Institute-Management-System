@@ -30,16 +30,16 @@ test("class end date is computed and is not stored in the class document", async
   assert.equal(cls.toObject().end_date, undefined);
 });
 
-test("student status is limited to active, waiting, and finished", async () => {
+test("student status is waiting, active, withdrawn or graduated", async () => {
   const student = new Student({
     user_id: new mongoose.Types.ObjectId(),
     level_id: new mongoose.Types.ObjectId(),
-    status: "finished",
+    status: "graduated",
   });
   await assert.doesNotReject(student.validate());
 
-  student.status = "graduated";
-  await assert.rejects(student.validate(), /`graduated` is not a valid enum value/);
+  student.status = "finished";
+  await assert.rejects(student.validate(), /`finished` is not a valid enum value/);
 });
 
 test("grade model enforces the configured maximum score per exam", async () => {

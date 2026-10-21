@@ -9,6 +9,7 @@ import classesRouter from "./classesRouter.js"; // P2
 import studentsRouter from "./studentsRouter.js"; // P2
 import schedulesRouter from "./schedulesRouter.js"; // P3
 import gradesRouter from "./gradesRouter.js"; // P3
+import resultsRouter from "./resultsRouter.js"; // P3
 import statsRouter from "./statsRouter.js"; // P3
 
 const router = Router();
@@ -26,6 +27,7 @@ router.use("/classes", classesRouter);
 router.use("/students", studentsRouter);
 router.use("/schedules", schedulesRouter);
 router.use("/grades", gradesRouter);
+router.use("/results", resultsRouter);
 router.use("/stats", statsRouter);
 
 export default router;
