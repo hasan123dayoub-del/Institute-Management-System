@@ -59,7 +59,7 @@ export default function Login() {
         <h2 className="text-2xl">Welcome back</h2>
         <p className="text-muted-foreground">Sign in to continue</p>
         <Field label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required />
-        <Field label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
+        <Field label="Password" as="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
         {error && (
           <p className="rounded-md bg-danger-soft px-3 py-2 text-sm text-destructive" role="alert">
             {error}
