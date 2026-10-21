@@ -1,20 +1,28 @@
+import { Monitor, Moon, Sun } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useTheme } from './useTheme.js'
 
-const LABELS = { light: 'Light', dark: 'Dark', system: 'System' }
-const ICONS = { light: '☀', dark: '☾', system: '◐' }
+const CONFIG = {
+  light: { label: 'Light', Icon: Sun },
+  dark: { label: 'Dark', Icon: Moon },
+  system: { label: 'System', Icon: Monitor },
+}
 
 // One button that cycles light -> dark -> system.
 export default function ThemeToggle() {
   const { mode, cycle } = useTheme()
+  const { label, Icon } = CONFIG[mode]
   return (
-    <button
+    <Button
       type="button"
-      className="btn ghost sm"
+      variant="outline"
+      size="sm"
       onClick={cycle}
-      aria-label={`Theme: ${LABELS[mode]}. Click to change.`}
-      title={`Theme: ${LABELS[mode]}`}
+      aria-label={`Theme: ${label}. Click to change.`}
+      title={`Theme: ${label}`}
     >
-      <span aria-hidden="true">{ICONS[mode]}</span> {LABELS[mode]}
-    </button>
+      <Icon aria-hidden="true" />
+      {label}
+    </Button>
   )
 }

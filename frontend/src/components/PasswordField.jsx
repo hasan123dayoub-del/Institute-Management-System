@@ -1,4 +1,7 @@
 import { useId, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 // Passwords are set by staff (backend rule: at least 8 characters), so the field can
 // generate one and show it, to hand over to the user.
@@ -14,9 +17,9 @@ export default function PasswordField({ label = 'Password', value, onChange, err
   const [visible, setVisible] = useState(false)
 
   return (
-    <div className="field">
-      <label htmlFor={id}>{label}</label>
-      <input
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <Input
         id={id}
         type={visible ? 'text' : 'password'}
         value={value}
@@ -24,15 +27,19 @@ export default function PasswordField({ label = 'Password', value, onChange, err
         autoComplete="new-password"
         aria-invalid={error ? true : undefined}
       />
-      <div className="row" style={{ gap: 8 }}>
-        <button type="button" className="btn ghost sm" onClick={() => onChange(generate())}>
+      <div className="flex gap-2">
+        <Button type="button" variant="outline" size="xs" onClick={() => onChange(generate())}>
           Generate
-        </button>
-        <button type="button" className="btn ghost sm" onClick={() => setVisible((v) => !v)}>
+        </Button>
+        <Button type="button" variant="outline" size="xs" onClick={() => setVisible((v) => !v)}>
           {visible ? 'Hide' : 'Show'}
-        </button>
+        </Button>
       </div>
-      {error ? <span className="error" role="alert">{error}</span> : <span className="hint">{hint}</span>}
+      {error ? (
+        <span className="text-xs text-destructive" role="alert">{error}</span>
+      ) : (
+        <span className="text-xs text-muted-foreground">{hint}</span>
+      )}
     </div>
   )
 }

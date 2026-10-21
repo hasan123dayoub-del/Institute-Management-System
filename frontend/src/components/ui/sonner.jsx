@@ -1,0 +1,37 @@
+import {
+  CircleCheckIcon,
+  InfoIcon,
+  Loader2Icon,
+  OctagonXIcon,
+  TriangleAlertIcon,
+} from "lucide-react"
+import { Toaster as Sonner } from "sonner"
+import { useTheme } from "@/theme/useTheme.js"
+
+// Toasts: call `toast.success("Saved")` or `toast.error(err.message)` (import { toast } from "sonner").
+const Toaster = ({ ...props }) => {
+  const { mode } = useTheme()
+
+  return (
+    <Sonner
+      theme={mode}
+      className="toaster group"
+      icons={{
+        success: <CircleCheckIcon className="size-4" />,
+        info: <InfoIcon className="size-4" />,
+        warning: <TriangleAlertIcon className="size-4" />,
+        error: <OctagonXIcon className="size-4" />,
+        loading: <Loader2Icon className="size-4 animate-spin" />,
+      }}
+      style={{
+        "--normal-bg": "var(--popover)",
+        "--normal-text": "var(--popover-foreground)",
+        "--normal-border": "var(--border)",
+        "--border-radius": "var(--radius)",
+      }}
+      {...props}
+    />
+  )
+}
+
+export { Toaster }
