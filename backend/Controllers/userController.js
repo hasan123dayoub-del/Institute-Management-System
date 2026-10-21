@@ -1,6 +1,8 @@
 // Thin layer: read req, call services/userService.js, send res.
-// TODO: handlers for this resource (see docs/api-contract.md)
 import * as userService from "../services/userService.js";
 
-void userService;
-export {};
+
+export const setPassword = async (req, res) => {
+  await userService.setPassword(req.user, req.params.id, req.body?.password);
+  res.status(204).end();
+};
