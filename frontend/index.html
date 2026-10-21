@@ -11,8 +11,9 @@
       // Apply the saved theme before first paint so there is no light flash.
       // Keep the storage key in sync with src/theme/ThemeProvider.jsx.
       try {
-        var t = localStorage.getItem('ascend-theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        var t = localStorage.getItem("ascend-theme");
+        var dark = t === "dark" || ((t === null || t === "system") && matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
       } catch (e) {}
     </script>
   </head>
