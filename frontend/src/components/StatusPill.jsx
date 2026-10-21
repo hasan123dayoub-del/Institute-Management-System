@@ -7,8 +7,6 @@ const MAP = {
   // student.status
   waiting: ['Waiting', 'warn'],
   active: ['Studying', 'ok'],
-  withdrawn: ['Withdrawn', ''],
-  graduated: ['Graduated', 'info'],
   // teacher.salary_status
   paid: ['Paid', 'ok'],
   unpaid: ['Unpaid', 'bad'],

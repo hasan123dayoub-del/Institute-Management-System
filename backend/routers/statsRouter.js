@@ -1,7 +1,11 @@
-import { Router } from "express";
+import express from "express";
+import { getAdminStats } from "../Controllers/statsController.js";
+import authenticate from "../middleware/authenticate.js";
+import authorize from "../middleware/authorize.js";
 
-const router = Router();
+const router = express.Router();
 
-// TODO: add the routes for this resource (see docs/api-contract.md)
+// مسار جلب إحصائيات المعهد الإجمالية: GET /api/stats/overview
+router.get("/overview", authenticate, authorize("admin"), getAdminStats);
 
 export default router;

@@ -29,7 +29,7 @@ const studentSchema = new mongoose.Schema({
   registered_at: { type: Date, default: Date.now },
   status: {
     type: String,
-    enum: ["waiting", "active", "withdrawn", "graduated"],
+    enum: ["active", "waiting", "finished"],
     default: "waiting",
   },
 });

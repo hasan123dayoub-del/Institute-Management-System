@@ -8,8 +8,8 @@ export default function Grades() {
       todo={[
         'Class picker (own classes only) and an exam switch: oral /20, midterm /30, final /50',
         'Table of students with editable inputs and a Save button',
-        'Final is locked until the last session day, and everything locks when the class is finished',
-        'Notice with the final-grades deadline (last session + 3 days)',
+        'Final is locked until the computed last session, and grades close after the three-day grading window',
+        'Show the course start date and calculated last session date',
       ]}
     />
   )

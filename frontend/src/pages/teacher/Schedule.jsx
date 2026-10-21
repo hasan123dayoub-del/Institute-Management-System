@@ -7,7 +7,7 @@ export default function Schedule() {
       api={['GET /schedules', 'POST /schedules', 'PATCH /schedules/:id', 'DELETE /schedules/:id']}
       todo={[
         'Weekly grid Sat to Thu with the teacher’s own sessions',
-        'Move a session: new day and time, checks (inside the shift, no clash), new course end date',
+        'Move a session: new day and time, check for clashes, recalculate the course end date from level hours and schedule',
         'Add and delete a session; 409 on clash shows the message',
         'Finished classes appear but are read only',
       ]}
