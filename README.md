@@ -150,3 +150,22 @@ When a course finishes, a daily job saves one result per student, promotes those
 Built by a team of three developers, each owning a part of the system (foundation & accounts · classes & students · schedules, grades & automation), working on feature branches with pull requests into `main`.
 
 More docs: [backend/README.md](backend/README.md) · [frontend/README.md](frontend/README.md)
+
+## 🙋 My contribution (Hasan Dayoub)
+
+Team project with [@saraalhorani24](https://github.com/saraalhorani24) and [@Hanan-Alkahwaji](https://github.com/Hanan-Alkahwaji). My work came in through the `hasan` branch and these pull requests:
+
+- [#2](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/2) Backend foundation fixes: ESM setup, model constraints, auth and middleware
+- [#3](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/3) Frontend structure: light/dark theme, auth, API client, layouts, routes per role
+- [#7](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/7) Dashboard
+- [#8](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/8) Add-secretary page
+- [#6](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/6), [#9](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/9) Remaining backend services, live frontend, demo data and docs
+
+Areas I owned:
+
+- **React frontend:** `frontend/src` (components, pages, features, API client, layouts, routes, auth, theme)
+- **Backend services:** class, student, schedule, teacher, grade, result and secretary services in `backend/services`
+- **Automation:** the `backend/jobs/finishClasses.js` scheduled job
+- **Docs and data:** `backend/seedDemo.js`, the READMEs and `docs/api-contract.md`
+
+Teammates' work arrived through the `sara` ([#1](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/1)) and `hanan` ([#4](https://github.com/hasan123dayoub-del/Institute-Management-System/pull/4)) branches.
