@@ -145,6 +145,13 @@ When a course finishes, a daily job saves one result per student, promotes those
 
 ---
 
+## 🌐 Live demo
+
+- **Dashboard:** https://institute-dashboard-gnsa.onrender.com
+- **API:** https://institute-api-5uid.onrender.com/api/health
+- Demo accounts (password `Demo12345` for all): admin `admin@ascend.academy`, secretary `sec@ascend.academy`, teacher `lina@ascend.academy`, student `layan@mail.com`
+- Hosted on Render's free tier with MongoDB Atlas: the API sleeps when idle, so the first login can take about a minute.
+
 ## 📸 Screenshots
 
 Seeded demo data (`npm run seed:demo`).
