@@ -145,6 +145,14 @@ When a course finishes, a daily job saves one result per student, promotes those
 
 ---
 
+## 📸 Screenshots
+
+Seeded demo data (`npm run seed:demo`).
+
+| Admin dashboard | Students (secretary) | Classes (secretary) |
+|---|---|---|
+| ![Admin dashboard](docs/screenshots/institute-admin.jpg) | ![Students](docs/screenshots/institute-students.jpg) | ![Classes](docs/screenshots/institute-classes.jpg) |
+
 ## 👥 Team
 
 Built by a team of three developers, each owning a part of the system (foundation & accounts · classes & students · schedules, grades & automation), working on feature branches with pull requests into `main`.
