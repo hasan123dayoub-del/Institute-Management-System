@@ -2,6 +2,7 @@
 
 A full-stack management platform for an English language academy. It handles the whole academic cycle — student registration, placement by level, classes and timetables, grading, automatic course closing and level promotion — plus teacher salaries and admin analytics.
 
+[![CI](https://github.com/hasan123dayoub-del/Institute-Management-System/actions/workflows/ci.yml/badge.svg)](https://github.com/hasan123dayoub-del/Institute-Management-System/actions/workflows/ci.yml)
 ![Node.js](https://img.shields.io/badge/Node.js-Express%205-339933?logo=node.js&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb&logoColor=white)
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
