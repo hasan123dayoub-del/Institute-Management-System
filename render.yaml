@@ -1,0 +1,46 @@
+# Render Blueprint: Node API (MongoDB Atlas) + React dashboard as a static site, both on the free plan.
+services:
+  - type: web
+    name: institute-api
+    runtime: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci
+    # Both seed scripts are idempotent: levels/admin are upserted, demo data is skipped once classes exist.
+    startCommand: node seed.js && node seedDemo.js && node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: ADMIN_EMAIL
+        value: admin@ascend.academy
+      - key: ADMIN_PASSWORD
+        value: Demo12345
+      - key: ADMIN_NAME
+        value: Admin
+      - key: CLIENT_ORIGIN
+        fromService:
+          type: web
+          name: institute-dashboard
+          property: host
+
+  - type: web
+    name: institute-dashboard
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: institute-api
+          property: host
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

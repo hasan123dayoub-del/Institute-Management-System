@@ -1,6 +1,8 @@
 import { clearToken, getToken } from '../auth/token.js'
 
-const BASE = `${import.meta.env.VITE_API_URL || ''}/api`
+// VITE_API_URL can be a full URL or a bare host (Render's blueprint passes the API host only).
+const API_URL = import.meta.env.VITE_API_URL || ''
+const BASE = `${API_URL && !/^https?:\/\//.test(API_URL) ? `https://${API_URL}` : API_URL}/api`
 
 // The backend always answers errors as { message, code } (see backend/README.md).
 export class ApiError extends Error {

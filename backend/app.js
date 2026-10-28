@@ -5,7 +5,9 @@ import errorHandler from "./middleware/errorHandler.js";
 
 const app = express();
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || "http://localhost:5173" }));
+// CLIENT_ORIGIN can be a full URL or a bare host (Render's blueprint passes the dashboard host only).
+const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
+app.use(cors({ origin: /^https?:\/\//.test(clientOrigin) ? clientOrigin : `https://${clientOrigin}` }));
 app.use(express.json());
 
 app.get("/api/health", (req, res) => res.json({ ok: true }));
