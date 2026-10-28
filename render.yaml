@@ -22,11 +22,9 @@ services:
         value: Demo12345
       - key: ADMIN_NAME
         value: Admin
+      # fromService "host" is the private-network name, not the public URL, so the public URLs are set explicitly.
       - key: CLIENT_ORIGIN
-        fromService:
-          type: web
-          name: institute-dashboard
-          property: host
+        value: https://institute-dashboard-gnsa.onrender.com
 
   - type: web
     name: institute-dashboard
@@ -36,10 +34,7 @@ services:
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: institute-api
-          property: host
+        value: https://institute-api-5uid.onrender.com
     routes:
       - type: rewrite
         source: /*
