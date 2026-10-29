@@ -10,6 +10,15 @@ const clientOrigin = process.env.CLIENT_ORIGIN || "http://localhost:5173";
 app.use(cors({ origin: /^https?:\/\//.test(clientOrigin) ? clientOrigin : `https://${clientOrigin}` }));
 app.use(express.json());
 
+// The API has no page of its own; point visitors who open the bare URL to the right places.
+app.get("/", (req, res) =>
+  res.json({
+    name: "Ascend Institute API",
+    status: "running",
+    health: "/api/health",
+    dashboard: "https://institute-dashboard-gnsa.onrender.com",
+  }),
+);
 app.get("/api/health", (req, res) => res.json({ ok: true }));
 app.use("/api", routes);
 
