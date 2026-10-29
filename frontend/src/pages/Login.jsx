@@ -7,6 +7,16 @@ import { Button } from '@/components/ui/button'
 import Logo from '@/layouts/Logo.jsx'
 import ThemeToggle from '@/theme/ThemeToggle.jsx'
 
+// The public demo (VITE_DEMO=true) lists its seeded accounts so visitors can sign in with one click.
+const DEMO = import.meta.env.VITE_DEMO === 'true'
+const DEMO_PASSWORD = 'Demo12345'
+const DEMO_ACCOUNTS = [
+  ['Admin', 'admin@ascend.academy'],
+  ['Secretary', 'sec@ascend.academy'],
+  ['Teacher', 'lina@ascend.academy'],
+  ['Student', 'layan@mail.com'],
+]
+
 export default function Login() {
   const { user, login } = useAuth()
   const navigate = useNavigate()
@@ -67,6 +77,28 @@ export default function Login() {
         )}
         <Button type="submit" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</Button>
         <small className="text-muted-foreground">Forgot your password? Ask the front desk.</small>
+        {DEMO && (
+          <div className="rounded-md border border-dashed p-3 text-sm">
+            <p className="mb-2 font-medium">Demo accounts (password {DEMO_PASSWORD})</p>
+            <div className="flex flex-wrap gap-2">
+              {DEMO_ACCOUNTS.map(([role, demoEmail]) => (
+                <Button
+                  key={role}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setEmail(demoEmail)
+                    setPassword(DEMO_PASSWORD)
+                  }}
+                >
+                  {role}
+                </Button>
+              ))}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">Free hosting: the first sign-in can take up to a minute while the server wakes up.</p>
+          </div>
+        )}
       </form>
     </div>
   )

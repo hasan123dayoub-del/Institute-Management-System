@@ -35,6 +35,8 @@ services:
     envVars:
       - key: VITE_API_URL
         value: https://institute-api-5uid.onrender.com
+      - key: VITE_DEMO
+        value: "true"
     routes:
       - type: rewrite
         source: /*
