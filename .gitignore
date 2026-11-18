@@ -149,3 +149,6 @@ vite.config.ts.timestamp-*
 .turbo
 # local development database (npm run db)
 backend/.data/
+
+# Vercel CLI link
+.vercel/

@@ -16,7 +16,7 @@ app.get("/", (req, res) =>
     name: "Ascend Institute API",
     status: "running",
     health: "/api/health",
-    dashboard: "https://institute-dashboard-gnsa.onrender.com",
+    dashboard: "https://ascend-institute-dashboard.vercel.app",
   }),
 );
 app.get("/api/health", (req, res) => res.json({ ok: true }));

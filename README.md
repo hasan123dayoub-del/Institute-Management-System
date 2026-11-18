@@ -148,10 +148,10 @@ When a course finishes, a daily job saves one result per student, promotes those
 
 ## 🌐 Live demo
 
-- **Dashboard:** https://institute-dashboard-gnsa.onrender.com
-- **API:** https://institute-api-5uid.onrender.com/api/health
+- **Dashboard:** https://ascend-institute-dashboard.vercel.app
+- **API:** https://ascend-institute-api.vercel.app/api/health
 - Demo accounts (password `Demo12345` for all): admin `admin@ascend.academy`, secretary `sec@ascend.academy`, teacher `lina@ascend.academy`, student `layan@mail.com`
-- Hosted on Render's free tier with MongoDB Atlas: the API sleeps when idle, so the first login can take about a minute.
+- Hosted on Vercel with MongoDB Atlas: the API runs as a serverless function in Frankfurt, and the scheduled jobs (closing finished classes every night, resetting salaries on the 1st) run as Vercel Cron jobs.
 
 ## 📸 Screenshots
 

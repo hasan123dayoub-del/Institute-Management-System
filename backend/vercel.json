@@ -1,0 +1,17 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "node seed.js && node seedDemo.js && mkdir -p public && echo \"User-agent: * Disallow: /\" > public/robots.txt",
+  "outputDirectory": "public",
+  "regions": ["fra1"],
+  "functions": {
+    "api/index.js": { "maxDuration": 30 },
+    "api/cron/[job].js": { "maxDuration": 60 }
+  },
+  "crons": [
+    { "path": "/api/cron/finish-classes", "schedule": "0 1 * * *" },
+    { "path": "/api/cron/reset-salaries", "schedule": "0 0 1 * *" }
+  ],
+  "rewrites": [{ "source": "/((?!api/cron/).*)", "destination": "/api" }]
+}
